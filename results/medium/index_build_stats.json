@@ -1,0 +1,16 @@
+{
+  "num_vectors": 100000,
+  "dimension": 4096,
+  "metric": "l2",
+  "M": 16,
+  "ef_construction": 50,
+  "random_seed": 42,
+  "build_time_seconds": 713.89,
+  "build_time_minutes": 11.9,
+  "index_memory_mb": 1609.26,
+  "peak_rss_mb": 1760.32,
+  "num_layers": 5,
+  "max_layer": 4,
+  "enter_point": 2902,
+  "file_size_mb": 11.85
+}

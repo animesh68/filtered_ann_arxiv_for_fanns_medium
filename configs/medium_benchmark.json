@@ -1,0 +1,54 @@
+{
+  "dataset": {
+    "repo_id": "SPCL/arxiv-for-fanns-medium",
+    "local_dir": "data/arxiv-for-fanns-medium",
+    "expected_database_size": 100000,
+    "expected_query_size": 10000,
+    "dimension": 4096,
+    "vector_dtype": "float32",
+    "metric": "l2"
+  },
+  "workloads": ["EM", "Range", "EMIS"],
+  "evaluation": {
+    "k": 10,
+    "num_eval_queries": 500,
+    "random_seed": 42,
+    "mmap_vectors": true,
+    "chunk_size": 5000
+  },
+  "hnsw": {
+    "M": 16,
+    "ef_construction": 100,
+    "ef_search": 50,
+    "random_seed": 42
+  },
+  "strategies": {
+    "exact_search": true,
+    "prefilter": true,
+    "hnsw_postfilter": true,
+    "hnsw_overfetch": {
+      "factors": [1.0, 2.0, 5.0, 10.0, 20.0, 50.0],
+      "primary_factors": [2.0, 5.0, 10.0, 20.0]
+    },
+    "ingraph": true,
+    "acorn_approx": {
+      "n_hops": 2
+    },
+    "sieve_approx": {
+      "sample_size": 16
+    },
+    "unify_approx": {
+      "ultra_low_sel_threshold": 0.02,
+      "low_sel_threshold": 0.10
+    }
+  },
+  "hardware_limits": {
+    "total_visible_ram_kb": 7682164,
+    "max_safe_ram_mb": 5500,
+    "cpu_cores": 4,
+    "cpu_logical_processors": 8,
+    "gpu_name": "AMD Radeon(TM) Graphics",
+    "gpu_vram_mb": 512,
+    "use_gpu": false
+  }
+}

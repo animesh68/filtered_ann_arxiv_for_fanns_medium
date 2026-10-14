@@ -1,0 +1,148 @@
+{
+  "dataset_name": "SPCL/arxiv-for-fanns-medium",
+  "validation_timestamp": "2026-10-14 16:54:15",
+  "checks": {
+    "files_present": true,
+    "vector_dimensions_agree": true,
+    "metadata_counts_agree": true,
+    "no_nan_or_inf": true,
+    "ground_truth_ids_valid": true,
+    "filter_semantics_validated": true
+  },
+  "summary": {
+    "db_vector_min": -0.10577908158302307,
+    "db_vector_max": 0.09878481179475784
+  },
+  "file_stats": {
+    "database_vectors.fvecs": {
+      "exists": true,
+      "size_mb": 1562.88,
+      "size_bytes": 1638800000
+    },
+    "database_attributes.jsonl": {
+      "exists": true,
+      "size_mb": 39.05,
+      "size_bytes": 40945622
+    },
+    "query_vectors.fvecs": {
+      "exists": true,
+      "size_mb": 156.29,
+      "size_bytes": 163880000
+    },
+    "ground_truth.ivecs": {
+      "exists": true,
+      "size_mb": 3.85,
+      "size_bytes": 4040000
+    },
+    "em_query_attributes.jsonl": {
+      "exists": true,
+      "size_mb": 0.12,
+      "size_bytes": 130000
+    },
+    "ground_truth_em.ivecs": {
+      "exists": true,
+      "size_mb": 3.85,
+      "size_bytes": 4038224
+    },
+    "r_query_attributes.jsonl": {
+      "exists": true,
+      "size_mb": 0.41,
+      "size_bytes": 430000
+    },
+    "ground_truth_r.ivecs": {
+      "exists": true,
+      "size_mb": 3.85,
+      "size_bytes": 4040000
+    },
+    "emis_query_attributes.jsonl": {
+      "exists": true,
+      "size_mb": 0.18,
+      "size_bytes": 192387
+    },
+    "ground_truth_emis.ivecs": {
+      "exists": true,
+      "size_mb": 3.85,
+      "size_bytes": 4035992
+    }
+  },
+  "ground_truth_stats": {
+    "unfiltered": {
+      "format": "fixed_width_ivecs",
+      "k": 100,
+      "total_queries": 10000,
+      "min_id": 3,
+      "max_id": 99991,
+      "valid_id_range": true
+    },
+    "EM": {
+      "format": "variable_width_ivecs",
+      "min_results_per_query": 1,
+      "max_results_per_query": 100,
+      "mean_results_per_query": 99.96,
+      "total_queries": 10000,
+      "min_id": 3,
+      "max_id": 99991,
+      "valid_id_range": true
+    },
+    "Range": {
+      "format": "variable_width_ivecs",
+      "min_results_per_query": 100,
+      "max_results_per_query": 100,
+      "mean_results_per_query": 100.0,
+      "total_queries": 10000,
+      "min_id": 2,
+      "max_id": 99989,
+      "valid_id_range": true
+    },
+    "EMIS": {
+      "format": "variable_width_ivecs",
+      "min_results_per_query": 16,
+      "max_results_per_query": 100,
+      "mean_results_per_query": 99.9,
+      "total_queries": 10000,
+      "min_id": 2,
+      "max_id": 99997,
+      "valid_id_range": true
+    }
+  },
+  "selectivity_stats": {
+    "EM": {
+      "mean_selectivity": 0.38469640200000005,
+      "median_selectivity": 0.52817,
+      "min_selectivity": 1e-05,
+      "max_selectivity": 0.52817,
+      "p10_selectivity": 0.1204,
+      "p90_selectivity": 0.52817,
+      "mean_candidates": 38469.6402,
+      "median_candidates": 52817.0,
+      "min_candidates": 1,
+      "max_candidates": 52817
+    },
+    "Range": {
+      "mean_selectivity": 0.44552398300000007,
+      "median_selectivity": 0.437875,
+      "min_selectivity": 0.00254,
+      "max_selectivity": 0.9509,
+      "p10_selectivity": 0.166044,
+      "p90_selectivity": 0.7377840000000001,
+      "mean_candidates": 44552.3983,
+      "median_candidates": 43787.5,
+      "min_candidates": 254,
+      "max_candidates": 95090
+    },
+    "EMIS": {
+      "mean_selectivity": 0.152429374,
+      "median_selectivity": 0.13226,
+      "min_selectivity": 0.00016,
+      "max_selectivity": 0.27645,
+      "p10_selectivity": 0.0305,
+      "p90_selectivity": 0.27645,
+      "mean_candidates": 15242.9374,
+      "median_candidates": 13226.0,
+      "min_candidates": 16,
+      "max_candidates": 27645
+    }
+  },
+  "validation_duration_seconds": 11.46,
+  "status": "PASSED"
+}
