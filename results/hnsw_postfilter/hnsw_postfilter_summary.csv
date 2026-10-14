@@ -1,0 +1,4 @@
+method,filter_type,k,num_queries,index_build_time_s,index_memory_mb,mean_recall,mean_latency_ms,median_latency_ms,p95_latency_ms,p99_latency_ms,qps,mean_selectivity,mean_candidate_count,parameters,param_k,param_M,param_ef_construction,param_ef_search
+HNSW_PostFilter,EM,10,500,0.0,1609.2647743225098,0.3322,4.836726199999999,4.4252,7.68392,11.503281999999992,206.75141793223693,0.38489466,10.0,"{'k': 10, 'M': 16, 'ef_construction': 100, 'ef_search': 50}",10,16,100,50
+HNSW_PostFilter,EMIS,10,500,0.0,1609.2647743225098,0.1714,8.577398,8.4852,11.940029999999991,14.091416999999998,116.58547265732568,0.1496539,10.0,"{'k': 10, 'M': 16, 'ef_construction': 100, 'ef_search': 50}",10,16,100,50
+HNSW_PostFilter,Range,10,500,0.0,1609.2647743225098,0.4164,4.725373800000001,4.464700000000001,6.650569999999997,8.784342999999994,211.6234698723728,0.43194508,10.0,"{'k': 10, 'M': 16, 'ef_construction': 100, 'ef_search': 50}",10,16,100,50

@@ -1,0 +1,4 @@
+method,filter_type,k,num_queries,index_build_time_s,index_memory_mb,mean_recall,mean_latency_ms,median_latency_ms,p95_latency_ms,p99_latency_ms,qps,mean_selectivity,mean_candidate_count,parameters,param_k,param_M,param_ef_construction,param_ef_search
+InGraphFilter,EM,10,500,0.0,1609.2647743225098,0.9374,13.988776,9.8491,32.28096499999997,97.10029199999995,71.48588268194445,0.38489466,2316.73,"{'k': 10, 'M': 16, 'ef_construction': 100, 'ef_search': 50}",10,16,100,50
+InGraphFilter,EMIS,10,500,0.0,1609.2647743225098,0.8858,335.33892940000004,178.88265,1119.972215,1446.6859649999997,2.9820575910743035,0.1496539,18530.278,"{'k': 10, 'M': 16, 'ef_construction': 100, 'ef_search': 50}",10,16,100,50
+InGraphFilter,Range,10,500,0.0,1609.2647743225098,0.9304,24.1408934,11.9138,73.55248499999998,189.255127,41.42348766595357,0.43194508,3064.732,"{'k': 10, 'M': 16, 'ef_construction': 100, 'ef_search': 50}",10,16,100,50

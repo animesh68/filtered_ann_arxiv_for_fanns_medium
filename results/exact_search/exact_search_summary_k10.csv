@@ -1,0 +1,4 @@
+method,filter_type,k,num_queries,index_build_time_s,index_memory_mb,mean_recall,mean_latency_ms,median_latency_ms,p95_latency_ms,p99_latency_ms,qps,mean_selectivity,mean_candidate_count,parameters,param_k,param_M,param_ef_construction,param_ef_search
+ExactSearch,EM,10,500,0.0,0.0,1.0,310.56628980000005,378.3976,459.77732,576.6254499999999,3.2199244826088007,0.38489466,38489.466,"{'k': 10, 'M': 16, 'ef_construction': 100, 'ef_search': 50}",10,16,100,50
+ExactSearch,EMIS,10,500,0.0,0.0,1.0,154.6674186,139.54655,291.409715,310.918547,6.465485808528261,0.1496539,14965.39,"{'k': 10, 'M': 16, 'ef_construction': 100, 'ef_search': 50}",10,16,100,50
+ExactSearch,Range,10,500,0.0,0.0,1.0,359.962849,338.27,662.1570849999998,773.3880819999989,2.778064466313856,0.43194508,43194.508,"{'k': 10, 'M': 16, 'ef_construction': 100, 'ef_search': 50}",10,16,100,50
