@@ -1,0 +1,45 @@
+{
+  "experiment_id": "EXP-03",
+  "title": "Selectivity-Aware Adaptive Router Evaluation",
+  "timestamp": "2026-10-16T06:45:31Z",
+  "hardware": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "cpu": "AMD64 Family 23 Model 104 Stepping 1, AuthenticAMD",
+    "physical_cores": 4,
+    "logical_cores": 8,
+    "total_ram_gb": 7.33
+  },
+  "parameters": {
+    "index_path": "research_audit\\followup_runs\\hnsw_index_m16_ef50.pkl",
+    "k": 10,
+    "ef_search": 50,
+    "candidate_threshold": 0.02,
+    "validation_thresholds": [
+      0.005,
+      0.01,
+      0.02,
+      0.05,
+      0.1,
+      0.2
+    ],
+    "num_queries_per_workload": 500,
+    "tuning_split_range": [
+      0,
+      249
+    ],
+    "test_split_range": [
+      250,
+      499
+    ],
+    "workloads": [
+      "EM",
+      "Range",
+      "EMIS"
+    ],
+    "methods": [
+      "PreFilter",
+      "InGraphFilter",
+      "AdaptiveRouter_2pct"
+    ]
+  }
+}

@@ -1,0 +1,394 @@
+{
+  "audit_version": "1.0.0",
+  "timestamp": "2026-10-16T00:36:00Z",
+  "verifications": {
+    "artifact_inventory": {
+      "raw_results_csv": {
+        "path": "results/controlled_benchmark/all_queries_raw_results.csv",
+        "exists": true,
+        "size_bytes": 852431,
+        "status": "VERIFIED FROM ARTIFACTS"
+      },
+      "benchmark_summary_csv": {
+        "path": "results/controlled_benchmark/benchmark_summary.csv",
+        "exists": true,
+        "size_bytes": 8044,
+        "status": "VERIFIED FROM ARTIFACTS"
+      },
+      "stratified_summary_csv": {
+        "path": "results/controlled_benchmark/stratified_selectivity_summary.csv",
+        "exists": true,
+        "size_bytes": 11602,
+        "status": "VERIFIED FROM ARTIFACTS"
+      },
+      "hnsw_overfetch_csv": {
+        "path": "results/hnsw_overfetch/hnsw_overfetch_summary.csv",
+        "exists": true,
+        "size_bytes": 4782,
+        "status": "VERIFIED FROM ARTIFACTS"
+      },
+      "index_build_stats_json": {
+        "path": "results/medium/index_build_stats.json",
+        "exists": true,
+        "size_bytes": 341,
+        "status": "VERIFIED FROM ARTIFACTS"
+      },
+      "dataset_validation_json": {
+        "path": "results/medium/dataset_validation.json",
+        "exists": true,
+        "size_bytes": 3957,
+        "status": "VERIFIED FROM ARTIFACTS"
+      },
+      "config_json": {
+        "path": "configs/medium_benchmark.json",
+        "exists": true,
+        "size_bytes": 1227,
+        "status": "VERIFIED FROM ARTIFACTS"
+      },
+      "readme_md": {
+        "path": "README.md",
+        "exists": true,
+        "size_bytes": 12362,
+        "status": "VERIFIED FROM ARTIFACTS"
+      },
+      "migration_plan_md": {
+        "path": "reports/MEDIUM_MIGRATION_PLAN.md",
+        "exists": true,
+        "size_bytes": 12526,
+        "status": "VERIFIED FROM ARTIFACTS"
+      },
+      "benchmark_report_md": {
+        "path": "reports/MEDIUM_BENCHMARK_REPORT.md",
+        "exists": true,
+        "size_bytes": 13953,
+        "status": "VERIFIED FROM ARTIFACTS"
+      },
+      "cross_scale_md": {
+        "path": "reports/MEDIUM_VS_SMALL_COMPARISON.md",
+        "exists": true,
+        "size_bytes": 9224,
+        "status": "VERIFIED FROM ARTIFACTS"
+      },
+      "final_audit_md": {
+        "path": "reports/MEDIUM_FINAL_AUDIT.md",
+        "exists": true,
+        "size_bytes": 4931,
+        "status": "VERIFIED FROM ARTIFACTS"
+      },
+      "word_report_docx": {
+        "path": "reports/FANNS_Method_Comparison_Report.docx",
+        "exists": true,
+        "size_bytes": 1064601,
+        "status": "VERIFIED FROM ARTIFACTS"
+      },
+      "fig_recall_sel": {
+        "path": "reports/figures/recall_vs_selectivity.png",
+        "exists": true,
+        "size_bytes": 422753,
+        "status": "VERIFIED FROM ARTIFACTS"
+      },
+      "fig_pareto": {
+        "path": "reports/figures/recall_vs_latency_tradeoff.png",
+        "exists": true,
+        "size_bytes": 179037,
+        "status": "VERIFIED FROM ARTIFACTS"
+      },
+      "fig_qps": {
+        "path": "reports/figures/qps_comparison.png",
+        "exists": true,
+        "size_bytes": 222524,
+        "status": "VERIFIED FROM ARTIFACTS"
+      },
+      "fig_overfetch": {
+        "path": "reports/figures/overfetch_sensitivity.png",
+        "exists": true,
+        "size_bytes": 319683,
+        "status": "VERIFIED FROM ARTIFACTS"
+      },
+      "hnsw_index_pkl": {
+        "path": "results/hnsw_index_m16_ef100.pkl",
+        "exists": true,
+        "size_bytes": 12425828,
+        "status": "VERIFIED FROM ARTIFACTS"
+      }
+    },
+    "query_count_integrity": {
+      "status": "RECOMPUTED AND MATCHED",
+      "total_records": 16500,
+      "unique_methods_count": 11,
+      "unique_workloads_count": 3,
+      "evaluations_count": 33,
+      "queries_per_evaluation": 500,
+      "query_id_min": 0,
+      "query_id_max": 499,
+      "max_selectivity_divergence_across_methods": 0.0
+    },
+    "summary_recomputation": {
+      "status": "RECOMPUTED AND MATCHED",
+      "max_abs_error_recall": 1.1102230246251565e-16,
+      "max_abs_error_mean_latency_ms": 2.2737367544323206e-13,
+      "max_abs_error_median_latency_ms": 5.684341886080802e-14,
+      "max_abs_error_p95_latency_ms": 5.684341886080802e-14,
+      "max_abs_error_p99_latency_ms": 2.842170943040401e-14,
+      "max_abs_error_qps": 2.842170943040401e-14
+    },
+    "overfetch_sweep": {
+      "status": "VERIFIED FROM ARTIFACTS",
+      "factors": [
+        1.0,
+        2.0,
+        5.0,
+        10.0,
+        20.0,
+        50.0
+      ],
+      "workloads": [
+        "EM",
+        "Range",
+        "EMIS"
+      ],
+      "records_count": 18
+    }
+  },
+  "discrepancies": [
+    {
+      "id": "DISC-002",
+      "title": "HNSW Index Cache Filename vs. Actual Build Configuration",
+      "type": "METADATA_MISMATCH",
+      "severity": "MEDIUM",
+      "description": "The cached index file is named 'hnsw_index_m16_ef100.pkl', suggesting efConstruction=100. However, results/medium/index_build_stats.json records actual ef_construction=50.",
+      "root_cause": "build_index.py defaulted to ef_construction=50 to ensure safe index completion on the 7.5GB mobile Ryzen CPU within 12 minutes, but wrote to the default filename string 'results/hnsw_index_m16_ef100.pkl'.",
+      "resolution": "Document in audit that index construction was performed with M=16, efConstruction=50, build time 713.89 seconds (11.90 min).",
+      "status": "DISCREPANCY FOUND & EXPLAINED"
+    },
+    {
+      "id": "DISC-003",
+      "title": "Paper-Inspired Approximation Fidelity (ACORN, SIEVE, UNIFY)",
+      "type": "IMPLEMENTATION_FIDELITY_LIMITATION",
+      "severity": "HIGH",
+      "description": "Source code implementations in src/filter_aware.py (ACORN, SIEVE, UNIFY) are paper-inspired approximations evaluated on a single shared HNSW graph, rather than the official vendor C++/CUDA frameworks from SIGMOD/VLDB.",
+      "root_cause": "- ACORN (Patel et al. 2024) constructs a specialized gamma-scaled edge graph; our baseline approximates query-time traversal via 2-hop neighbor expansion.\n- SIEVE (Gao et al. 2024) builds a multi-index collection with a 3D packing model; our baseline approximates centroid entry routing by sampling 16 candidates.\n- UNIFY (Liang et al. 2024) constructs a Segmented Inclusive Graph (SIG); our baseline uses a heuristic rule switching between InGraph and ACORN with increased ef.",
+      "resolution": "Must be explicitly disclosed in the paper methodology. These methods must be described as 'paper-inspired single-graph heuristic baselines', not as official vendor implementations.",
+      "status": "LIMITATION FORMALLY DOCUMENTED"
+    }
+  ],
+  "recomputed_tables": {},
+  "cross_scale_comparison": [
+    {
+      "method": "ExactSearch",
+      "filter_type": "EM",
+      "small_recall": 1.0,
+      "medium_recall": 1.0,
+      "recall_delta": 0.0,
+      "small_latency_ms": 7.07,
+      "medium_latency_ms": 310.56628980000005,
+      "latency_slowdown_factor": 43.92733943422914,
+      "small_qps": 141.4,
+      "medium_qps": 3.2199244826088007
+    },
+    {
+      "method": "ExactSearch",
+      "filter_type": "Range",
+      "small_recall": 1.0,
+      "medium_recall": 1.0,
+      "recall_delta": 0.0,
+      "small_latency_ms": 8.3,
+      "medium_latency_ms": 359.962849,
+      "latency_slowdown_factor": 43.36901795180722,
+      "small_qps": 120.5,
+      "medium_qps": 2.7780644663138556
+    },
+    {
+      "method": "ExactSearch",
+      "filter_type": "EMIS",
+      "small_recall": 1.0,
+      "medium_recall": 1.0,
+      "recall_delta": 0.0,
+      "small_latency_ms": 3.11,
+      "medium_latency_ms": 154.6674186,
+      "latency_slowdown_factor": 49.73228893890675,
+      "small_qps": 321.5,
+      "medium_qps": 6.465485808528261
+    },
+    {
+      "method": "PreFilter",
+      "filter_type": "EM",
+      "small_recall": 1.0,
+      "medium_recall": 1.0,
+      "recall_delta": 0.0,
+      "small_latency_ms": 6.92,
+      "medium_latency_ms": 296.72909860000004,
+      "latency_slowdown_factor": 42.87992754335261,
+      "small_qps": 144.4,
+      "medium_qps": 3.3700773018827883
+    },
+    {
+      "method": "PreFilter",
+      "filter_type": "Range",
+      "small_recall": 1.0,
+      "medium_recall": 1.0,
+      "recall_delta": 0.0,
+      "small_latency_ms": 8.2,
+      "medium_latency_ms": 352.2792696,
+      "latency_slowdown_factor": 42.96088653658537,
+      "small_qps": 122.0,
+      "medium_qps": 2.8386569585416215
+    },
+    {
+      "method": "PreFilter",
+      "filter_type": "EMIS",
+      "small_recall": 1.0,
+      "medium_recall": 1.0,
+      "recall_delta": 0.0,
+      "small_latency_ms": 3.15,
+      "medium_latency_ms": 149.398939,
+      "latency_slowdown_factor": 47.42823460317461,
+      "small_qps": 317.5,
+      "medium_qps": 6.69348796379337
+    },
+    {
+      "method": "HNSW_PostFilter",
+      "filter_type": "EM",
+      "small_recall": 0.2608,
+      "medium_recall": 0.3322,
+      "recall_delta": 0.07140000000000002,
+      "small_latency_ms": 2.52,
+      "medium_latency_ms": 4.836726199999999,
+      "latency_slowdown_factor": 1.9193357936507933,
+      "small_qps": 396.5,
+      "medium_qps": 206.75141793223693
+    },
+    {
+      "method": "HNSW_PostFilter",
+      "filter_type": "Range",
+      "small_recall": 0.3952,
+      "medium_recall": 0.41640000000000005,
+      "recall_delta": 0.021200000000000052,
+      "small_latency_ms": 2.64,
+      "medium_latency_ms": 4.725373800000001,
+      "latency_slowdown_factor": 1.7899143181818185,
+      "small_qps": 378.8,
+      "medium_qps": 211.62346987237282
+    },
+    {
+      "method": "HNSW_PostFilter",
+      "filter_type": "EMIS",
+      "small_recall": 0.203,
+      "medium_recall": 0.1714,
+      "recall_delta": -0.03160000000000002,
+      "small_latency_ms": 2.67,
+      "medium_latency_ms": 8.577398,
+      "latency_slowdown_factor": 3.21250861423221,
+      "small_qps": 374.5,
+      "medium_qps": 116.58547265732568
+    },
+    {
+      "method": "HNSW_Overfetch_20x",
+      "filter_type": "EM",
+      "small_recall": 0.9958,
+      "medium_recall": 0.9404000000000001,
+      "recall_delta": -0.055399999999999894,
+      "small_latency_ms": 5.25,
+      "medium_latency_ms": 12.300342800000001,
+      "latency_slowdown_factor": 2.3429224380952385,
+      "small_qps": 190.4,
+      "medium_qps": 81.29854722422857
+    },
+    {
+      "method": "HNSW_Overfetch_20x",
+      "filter_type": "Range",
+      "small_recall": 0.971,
+      "medium_recall": 0.897,
+      "recall_delta": -0.07399999999999995,
+      "small_latency_ms": 5.11,
+      "medium_latency_ms": 13.6138086,
+      "latency_slowdown_factor": 2.664150410958904,
+      "small_qps": 195.7,
+      "medium_qps": 73.45483026696878
+    },
+    {
+      "method": "HNSW_Overfetch_20x",
+      "filter_type": "EMIS",
+      "small_recall": 0.6977,
+      "medium_recall": 0.3826,
+      "recall_delta": -0.3151,
+      "small_latency_ms": 5.41,
+      "medium_latency_ms": 21.8810182,
+      "latency_slowdown_factor": 4.044550499075785,
+      "small_qps": 184.8,
+      "medium_qps": 45.701712363641285
+    },
+    {
+      "method": "InGraphFilter",
+      "filter_type": "EM",
+      "small_recall": 0.9998,
+      "medium_recall": 0.9374000000000001,
+      "recall_delta": -0.0623999999999999,
+      "small_latency_ms": 4.95,
+      "medium_latency_ms": 13.988776,
+      "latency_slowdown_factor": 2.8260153535353534,
+      "small_qps": 202.0,
+      "medium_qps": 71.48588268194445
+    },
+    {
+      "method": "InGraphFilter",
+      "filter_type": "Range",
+      "small_recall": 0.9984,
+      "medium_recall": 0.9304000000000001,
+      "recall_delta": -0.06799999999999984,
+      "small_latency_ms": 4.64,
+      "medium_latency_ms": 24.1408934,
+      "latency_slowdown_factor": 5.20277875,
+      "small_qps": 215.5,
+      "medium_qps": 41.42348766595357
+    },
+    {
+      "method": "InGraphFilter",
+      "filter_type": "EMIS",
+      "small_recall": 0.994,
+      "medium_recall": 0.8858,
+      "recall_delta": -0.10819999999999996,
+      "small_latency_ms": 6.97,
+      "medium_latency_ms": 335.33892940000004,
+      "latency_slowdown_factor": 48.11175457675754,
+      "small_qps": 143.5,
+      "medium_qps": 2.9820575910743035
+    },
+    {
+      "method": "ACORN_Approx",
+      "filter_type": "EM",
+      "small_recall": 0.9998,
+      "medium_recall": 0.9783999999999999,
+      "recall_delta": -0.021400000000000086,
+      "small_latency_ms": 14.93,
+      "medium_latency_ms": 175.2290996,
+      "latency_slowdown_factor": 11.736711292699264,
+      "small_qps": 67.0,
+      "medium_qps": 5.706814691639265
+    },
+    {
+      "method": "ACORN_Approx",
+      "filter_type": "Range",
+      "small_recall": 0.9998,
+      "medium_recall": 0.9662000000000001,
+      "recall_delta": -0.03359999999999996,
+      "small_latency_ms": 14.13,
+      "medium_latency_ms": 202.7422604,
+      "latency_slowdown_factor": 14.348355300778485,
+      "small_qps": 70.8,
+      "medium_qps": 4.93237077473168
+    },
+    {
+      "method": "ACORN_Approx",
+      "filter_type": "EMIS",
+      "small_recall": 0.9948,
+      "medium_recall": 0.9104000000000001,
+      "recall_delta": -0.08439999999999992,
+      "small_latency_ms": 29.24,
+      "medium_latency_ms": 1815.0569395999999,
+      "latency_slowdown_factor": 62.07445073871409,
+      "small_qps": 34.2,
+      "medium_qps": 0.5509469031976368
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "experiment_id": "EXP-01",
+  "title": "HNSW Construction-Parameter Ablation Study",
+  "timestamp": "2026-10-16T06:41:27Z",
+  "hardware": {
+    "platform": "Windows-11-10.0.26200-SP0",
+    "cpu": "AMD64 Family 23 Model 104 Stepping 1, AuthenticAMD",
+    "physical_cores": 4,
+    "logical_cores": 8,
+    "total_ram_gb": 7.33
+  },
+  "parameters": {
+    "M": 16,
+    "ef_construction_conditions": [
+      50,
+      100
+    ],
+    "ef_search": 50,
+    "k": 10,
+    "random_seed": 42,
+    "num_queries_per_workload": 100,
+    "workloads": [
+      "EM",
+      "EMIS"
+    ],
+    "query_id_range": [
+      0,
+      99
+    ],
+    "methods": [
+      "InGraphFilter",
+      "HNSW_PostFilter"
+    ]
+  }
+}

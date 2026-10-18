@@ -1,0 +1,7 @@
+condition,method,sample_count,mean_latency_ms,median_latency_ms,p95_latency_ms,p99_latency_ms,min_latency_ms,max_latency_ms
+Condition_A_Pre_First,InGraphFilter,50,327.446,170.488,1132.708,1520.122,8.149,1686.499
+Condition_A_Pre_First,PreFilter,50,315.991,201.736,822.451,1719.807,15.52,1935.942
+Condition_B_InGraph_First,InGraphFilter,50,197.004,122.507,719.405,776.133,4.573,823.828
+Condition_B_InGraph_First,PreFilter,50,136.851,104.733,323.395,344.864,12.369,360.799
+Condition_C_Randomized,InGraphFilter,50,163.669,91.047,626.858,658.676,5.766,660.204
+Condition_C_Randomized,PreFilter,50,110.821,96.588,236.073,250.537,5.791,250.988

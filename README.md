@@ -73,8 +73,18 @@ filtered-ann-research-medium/
 │   ├── MEDIUM_BENCHMARK_REPORT.md       # Comprehensive academic research report
 │   ├── MEDIUM_VS_SMALL_COMPARISON.md    # Small (1K) vs Medium (100K) cross-scale comparison
 │   ├── MEDIUM_FINAL_AUDIT.md            # Independent reproducibility audit
-│   └── figures/                         # High-resolution publication plots
-├── figures/medium/                      # Publication plots mirror
+│   ├── FANNS_Method_Comparison_Report.docx # Formatted Word comparison report
+│   └── figures/                         # High-resolution benchmark plots
+├── figures/medium/                      # Benchmark plots mirror
+├── research_audit/
+│   ├── final_revision/                  # Camera-ready manuscript & audited evidence
+│   │   ├── paper_draft_revised.md       # Canonical 11-section revised research paper
+│   │   ├── references.bib               # Verified BibTeX bibliography
+│   │   ├── FINAL_READINESS_REPORT.md    # Paper readiness assessment & LaTeX gate
+│   │   ├── figures/                     # Manuscript vector PDFs & 300 DPI PNGs
+│   │   └── cache_microbenchmark_results/# Controlled cache-order diagnostic data
+│   ├── followup_runs/                   # EXP-01 & EXP-03 raw data, logs, and indexes
+│   └── archive/                         # Preserved preliminary audit & reconciliation notes
 ├── hpc/
 │   ├── hpc_checklist.md                 # Supercomputer memory sizing & deployment checklist
 │   └── slurm_job_template.sh            # Slurm batch script for cluster execution
@@ -141,7 +151,10 @@ python experiments/09_generate_plots_and_tables.py
 
 ## 📊 Measured Benchmark Results (100,000 Vectors, K=10, 500 Queries/Workload)
 
-All numbers below reflect actual measured performance on the local AMD Ryzen 3 5300U testbed across 16,500 evaluated queries:
+All numbers below reflect actual measured performance on the local AMD Ryzen CPU testbed (4 physical cores / 8 logical threads, 7.33 GB visible RAM) across 16,500 evaluated queries.
+- **HNSW Parameters**: $M=16, ef_{\text{construction}}=50, ef_{\text{search}}=50$, metric $=$ L2, random seed $= 42$.
+- **Index Construction Ablation**: A separate controlled ablation evaluated $ef_{\text{construction}}=100$ (build time $994.39\text{ s}$ vs. $713.89\text{ s}$), confirming that doubling construction effort yields $+4.2\%$ recall on EMIS ($0.882 \to 0.924$) but does not reduce visited nodes ($15,921$ vs. $15,860$ nodes). Full report: [`research_audit/followup_runs/EXP01_REPORT.md`](research_audit/followup_runs/EXP01_REPORT.md).
+- **Implementation Fidelity Notice**: ACORN-, SIEVE-, and UNIFY-style methods in this repository are educational Python heuristic baselines evaluating online multi-hop traversal and entry routing on standard HNSW graphs, not official C++/CUDA implementations from the original authors.
 
 | Strategy | EM Recall@10 | EM Latency | Range Recall@10 | Range Latency | EMIS Recall@10 | EMIS Latency | Mean Throughput |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -159,6 +172,15 @@ All numbers below reflect actual measured performance on the local AMD Ryzen 3 5
 
 *Note on Overfetch 50x (evaluated in `experiments/04_hnsw_overfetch.py`)*: Even expanding candidates to $k_{fetch}=500$ ($50\times$) only recovers EMIS recall to **0.5140** (at 46.18 ms latency), highlighting the fundamental recall ceiling of post-filtering when queries contain restrictive metadata constraints.
 
+---
+
+## 🔀 Validated Selectivity-Aware Query Router (`EXP-03`)
+
+A lightweight dynamic router switching between PreFilter (when estimated selectivity $\sigma \le 2\%$) and InGraphFilter (when $\sigma > 2\%$) was empirically validated across all 500 queries per workload ([`research_audit/followup_runs/EXP03_REPORT.md`](research_audit/followup_runs/EXP03_REPORT.md)):
+- **EM**: $0.9380$ recall at $14.11\text{ ms}$ ($70.9\text{ QPS}$), $0.002\text{ ms}$ routing overhead.
+- **Range**: $0.9304$ recall at $23.64\text{ ms}$ ($42.3\text{ QPS}$), $0.227\text{ ms}$ routing overhead.
+- **EMIS**: $0.8918$ recall ($+0.60\%$ over InGraph) at $185.57\text{ ms}$ ($13.5\%$ faster than InGraph's $214.43\text{ ms}$ in EXP-03), compressing P99 tail latency by **$127.1\text{ ms}$** ($929.95\text{ ms} \to 802.85\text{ ms}$).
+- **Generalization**: Validated on a 50/50 Train/Test split; operating range of $2\% \le \tau \le 5\%$ generalizes out-of-sample ([`research_audit/followup_runs/ROUTER_THRESHOLD_ANALYSIS.md`](research_audit/followup_runs/ROUTER_THRESHOLD_ANALYSIS.md)).
 
 ---
 
@@ -174,31 +196,34 @@ Generated plots are saved at 300 DPI under `reports/figures/` and `figures/mediu
 ## 🔍 Small (1K) vs Medium (100K) Architectural Analysis
 
 1. **L3 Cache Cliff**: Small-scale (1,000 vectors / 16.4 MB) fits inside the CPU cache hierarchy. Medium-scale (100,000 vectors / 1.64 GB) requires streaming from main DDR4 memory, exposing the true I/O and memory-bandwidth cost of linear pre-filtering.
-2. **Shift of the Selectivity Crossover**: On the small dataset, pre-filtering was faster than graph traversal up to $20\%$ selectivity. At 100K scale, a $20\%$ selectivity filter evaluates 20,000 candidates ($328 \text{ MB}$), causing the crossover point to shift leftward to **$\approx 3\%\text{--}5\%$ selectivity**.
-3. **Graph Traversal Scalability**: `InGraphFilter` visits only $\approx 800$ nodes out of 100,000 ($0.8\%$), achieving $>99.4\%$ recall at $5.4\text{--}6.2 \text{ ms}$ latency.
+2. **Shift of the Selectivity Crossover**: On the small dataset, pre-filtering was faster than graph traversal up to $20\%$ selectivity. At 100K scale, a $20\%$ selectivity filter evaluates 20,000 candidates ($328 \text{ MB}$), causing the crossover point to shift leftward to **$\approx 2\%\text{--}5\%$ selectivity**.
+3. **Graph Traversal Scalability & Subgraph Isolation**: On the medium dataset, `InGraphFilter` maintains high recall across workloads ($0.9374$ on EM, $0.9304$ on Range, $0.8858$ on EMIS). However, on selective workloads (EMIS), unguided entry points force traversal to explore filter-sparse neighborhoods, visiting an average of **$18,530$ nodes out of 100,000 ($18.5\%$)** and expanding mean query latency to **$335.34\text{ ms}$** (or $214.43\text{ ms}$ under warm cache in EXP-03), demonstrating the breakdown of logarithmic scaling under attribute sparsity.
 
 ---
 
 ## ⚙️ Hardware Environment & Measured Specifications
-- **CPU**: AMD Ryzen 3 5300U with Radeon Graphics (4 physical cores, 8 logical threads, 2.60 GHz base)
-- **RAM**: 7,682,164 KB (~7.50 GB visible)
+- **CPU**: AMD Ryzen Processor (Family 23 Model 104, 4 physical cores, 8 logical threads, 2.10 GHz base)
+- **RAM**: 7,682,164 KB (~7.33 GB visible physical RAM)
 - **Vector Storage**: Read-only OS memory mapping (`np.memmap`)
-- **Peak RSS**: ~1.85 GB during full exact-distance matrix operations
+- **Peak RSS**: ~1.75 GB during full exact-distance matrix operations
 - **Execution Architecture**: Strictly CPU-based (integrated GPU dedicated VRAM is 512 MB, insufficient for 1.64 GB vectors)
 
 ---
 
 ## 📝 Scientific Integrity & Audit Trail
-- Complete migration specification: [`reports/MEDIUM_MIGRATION_PLAN.md`](reports/MEDIUM_MIGRATION_PLAN.md)
-- Complete dataset verification report: [`reports/medium_dataset_validation.md`](reports/medium_dataset_validation.md)
-- Complete academic research report: [`reports/MEDIUM_BENCHMARK_REPORT.md`](reports/MEDIUM_BENCHMARK_REPORT.md)
-- Cross-scale comparison report: [`reports/MEDIUM_VS_SMALL_COMPARISON.md`](reports/MEDIUM_VS_SMALL_COMPARISON.md)
-- Independent final audit report: [`reports/MEDIUM_FINAL_AUDIT.md`](reports/MEDIUM_FINAL_AUDIT.md)
+- Working Revised Manuscript: [`research_audit/final_revision/paper_draft_revised.md`](research_audit/final_revision/paper_draft_revised.md)
+- Final Readiness & Verification Report: [`research_audit/final_revision/FINAL_READINESS_REPORT.md`](research_audit/final_revision/FINAL_READINESS_REPORT.md)
+- Claim-by-Claim Audit: [`research_audit/final_revision/CLAIM_AUDIT.md`](research_audit/final_revision/CLAIM_AUDIT.md)
+- Numerical Consistency Audit: [`research_audit/final_revision/NUMERICAL_CONSISTENCY_AUDIT.md`](research_audit/final_revision/NUMERICAL_CONSISTENCY_AUDIT.md)
+- Cache Micro-Benchmark Methodology: [`research_audit/final_revision/cache_microbenchmark_results/METHODOLOGY_NOTE.md`](research_audit/final_revision/cache_microbenchmark_results/METHODOLOGY_NOTE.md)
+- Follow-Up Experiments Report: [`research_audit/followup_runs/FOLLOWUP_EXPERIMENTS_VERDICT.md`](research_audit/followup_runs/FOLLOWUP_EXPERIMENTS_VERDICT.md)
+- Historical Audit Archive: [`research_audit/archive/`](research_audit/archive/)
 
 ---
 
 ## 📚 Citations & References
-- Malkov, Yu A., and D. A. Yashunin. "Efficient and robust approximate nearest neighbor search using hierarchical navigable small world graphs." *IEEE TPAMI* 42.4 (2018): 824-836.
-- Patel, J., et al. "ACORN: Performant and Predicate-Agnostic Approximate Nearest Neighbor Search." *ACM SIGMOD* (2024).
-- Gao, Y., et al. "SIEVE: A Framework for Filtered Approximate Nearest Neighbor Search." *VLDB* (2024).
-- Zhang, Z., et al. "UNIFY: Unified Graph Traversal for Filtered Vector Search." (2024).
+- Malkov, Yu A., and D. A. Yashunin. "Efficient and robust approximate nearest neighbor search using hierarchical navigable small world graphs." *IEEE Transactions on Pattern Analysis and Machine Intelligence* 42.4 (2018): 824-836. [DOI: 10.1109/TPAMI.2018.2889473](https://doi.org/10.1109/TPAMI.2018.2889473).
+- Iff, Patrick, Paul Bruegger, Marcin Chrapek, Maciej Besta, and Torsten Hoefler. "FANNS: Filtered Approximate Nearest Neighbor Search Benchmark." *arXiv preprint arXiv:2507.21989* (2025). [arXiv:2507.21989](https://arxiv.org/abs/2507.21989).
+- Patel, Liana, Peter Kraft, Carlos Guestrin, and Matei Zaharia. "ACORN: Performant and Predicate-Agnostic Approximate Nearest Neighbor Search." *Proceedings of the ACM on Management of Data (SIGMOD)* 2.3 (2024): 1-27. [DOI: 10.1145/3654932](https://doi.org/10.1145/3654932).
+- Gao, Zichen, et al. "High-Dimensional Filtered Vector Search with 3D Packing." *Proceedings of the VLDB Endowment* 17.11 (2024).
+- Liang, Anqi, Pengcheng Zhang, Bin Yao, Zhongpu Chen, Yitong Song, and Guangxu Cheng. "UNIFY: Unified Graph Index for Filtered Vector Retrieval." *arXiv preprint arXiv:2412.06208* (2024). [arXiv:2412.06208](https://arxiv.org/abs/2412.06208).
